@@ -579,6 +579,161 @@ select {
 .promo-row { display: flex; gap: 8px; margin: 16px 0; }
 .promo-row input { flex: 1; padding: 10px 12px; border-radius: var(--radius-sm); border: 1px solid var(--color-border); }
 
+/* ------------------------- Checkout Page ------------------------------------ */
+.btn.btn-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 32px;
+  align-items: flex-start;
+}
+@media (max-width: 900px) {
+  .checkout-layout { grid-template-columns: 1fr; }
+}
+.checkout-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 28px;
+  margin-bottom: 24px;
+}
+.checkout-card h2 {
+  font-size: 1.15rem;
+  margin-bottom: 4px;
+}
+.checkout-card .card-subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.form-grid .field-full { grid-column: 1 / -1; }
+@media (max-width: 520px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .form-grid .field-full { grid-column: auto; }
+}
+.field label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-navy);
+  margin-bottom: 6px;
+}
+.field input {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+.field input:focus { border-color: var(--color-emerald); }
+
+.payment-methods {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.payment-option {
+  flex: 1;
+  min-width: 150px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 13px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.payment-option:has(input:checked) {
+  border-color: var(--color-emerald);
+  background: rgba(15,169,104,0.06);
+}
+.payment-option input { accent-color: var(--color-emerald); width: 16px; height: 16px; }
+
+.demo-notice {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: #FFF6E9;
+  border: 1px solid rgba(242,169,59,0.4);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 0.83rem;
+  color: #7A5514;
+  margin-bottom: 20px;
+}
+.demo-notice svg { width: 18px; height: 18px; stroke: #B9791E; fill: none; stroke-width: 1.8; flex-shrink: 0; margin-top: 1px; }
+
+.form-error {
+  display: none;
+  background: rgba(214,69,69,0.08);
+  border: 1px solid rgba(214,69,69,0.3);
+  color: var(--color-danger);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  font-size: 0.85rem;
+  margin-bottom: 18px;
+}
+.secure-note {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.8rem; color: var(--color-text-muted);
+  margin-top: 14px; justify-content: center;
+}
+.secure-note svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+
+/* ------------------------- Order Confirmation -------------------------------- */
+.confirmation-box {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 20px 0 12px;
+}
+.confirmation-icon {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: rgba(15,169,104,0.12);
+  color: var(--color-emerald-dark);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+}
+.confirmation-icon svg { width: 30px; height: 30px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+.order-number-chip {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 8px 18px;
+  margin: 10px 0 28px;
+  letter-spacing: 0.02em;
+}
+.confirmation-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  text-align: left;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.confirmation-card h3 { font-size: 1rem; margin-bottom: 14px; }
+.confirmation-meta { font-size: 0.88rem; color: var(--color-text-muted); margin-bottom: 18px; line-height: 1.6; }
+.confirmation-meta strong { color: var(--color-navy); }
+
 /* ------------------------- Footer ------------------------------------------ */
 .site-footer { background: var(--color-navy); color: rgba(244,246,248,0.75); margin-top: 80px; }
 .footer-top { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 32px; padding: 56px 0 40px; }
