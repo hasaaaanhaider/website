@@ -1,0 +1,171 @@
+<!-- ==========================================================================
+     DailyBazaar — shop.html
+     ========================================================================== -->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop All Products — DailyBazaar</title>
+  <meta name="description" content="Browse DailyBazaar's full range of home, tech, and daily living essentials. Filter by category and price, delivered across the UK.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="shop">
+
+  <!-- ============================ HEADER ============================ -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">Daily<span>Bazaar</span></a>
+
+      <nav class="main-nav" aria-label="Primary">
+        <a href="index.html" data-nav="home">Home</a>
+        <a href="shop.html" data-nav="shop">Shop</a>
+        <a href="index.html#contact" data-nav="contact">Contact</a>
+      </nav>
+
+      <form class="header-search" role="search" onsubmit="return false;">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="search" placeholder="Search for products…" aria-label="Search products">
+      </form>
+
+      <div class="header-actions">
+        <a href="cart.html" class="icon-btn" aria-label="View cart">
+          <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.6 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+          <span class="cart-badge" data-cart-count>0</span>
+        </a>
+        <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="container mobile-search">
+      <form class="header-search" role="search" onsubmit="return false;">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="search" placeholder="Search for products…" aria-label="Search products">
+      </form>
+    </div>
+  </header>
+
+  <!-- ============================ PAGE HEAD ============================ -->
+  <div class="container">
+    <p class="breadcrumb"><a href="index.html">Home</a> / Shop</p>
+    <div class="page-head">
+      <h1>Shop All Products</h1>
+      <p>Everything you need for the home, delivered across the UK.</p>
+    </div>
+  </div>
+
+  <!-- ============================ MAIN LAYOUT ============================ -->
+  <section class="section" style="padding-top: 24px;">
+    <div class="container shop-layout">
+
+      <!-- Sidebar Filters -->
+      <aside class="filters" aria-label="Filter products">
+        <h3>Filters</h3>
+
+        <div class="filter-group">
+          <h4>Category</h4>
+          <label class="checkbox-row">
+            <input type="checkbox" data-filter-category value="Home & Kitchen">
+            Home &amp; Kitchen
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" data-filter-category value="Tech Gadgets">
+            Tech Gadgets
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" data-filter-category value="Daily Living">
+            Daily Living
+          </label>
+        </div>
+
+        <div class="filter-group">
+          <h4>Max Price</h4>
+          <div class="range-row">
+            <input type="range" id="price-range" min="5" max="60" step="1" value="60">
+            <div class="range-values">
+              <span>£5</span>
+              <span id="price-range-label">£60</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h4>Sort By</h4>
+          <select id="sort-select">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating">Highest Rated</option>
+          </select>
+        </div>
+      </aside>
+
+      <!-- Product Grid -->
+      <div>
+        <div class="shop-toolbar">
+          <span class="result-count" id="result-count">10 products</span>
+        </div>
+        <div class="product-grid" id="shop-grid">
+          <!-- Populated by script.js: initShopPage() -->
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================== FOOTER ================================ -->
+  <footer class="site-footer" id="contact">
+    <div class="container footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">Daily<span>Bazaar</span></a>
+        <p>Everyday essentials for UK homes, shipped quickly and priced fairly. Based in the UK, built for UK doorsteps.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="shop.html">All Products</a></li>
+          <li><a href="shop.html?category=Home%20%26%20Kitchen">Home &amp; Kitchen</a></li>
+          <li><a href="shop.html?category=Tech%20Gadgets">Tech Gadgets</a></li>
+          <li><a href="shop.html?category=Daily%20Living">Daily Living</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#contact">Contact Us</a></li>
+          <li><a href="#contact">Delivery &amp; Returns</a></li>
+          <li><a href="#contact">Track My Order</a></li>
+          <li><a href="#contact">FAQs</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#contact">About DailyBazaar</a></li>
+          <li><a href="#contact">Sustainability</a></li>
+          <li><a href="#contact">Careers</a></li>
+          <li><a href="#contact">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© 2026 DailyBazaar Ltd. All rights reserved. Registered in England &amp; Wales.</span>
+      <div class="payment-icons">
+        <span>VISA</span>
+        <span>Mastercard</span>
+        <span>PayPal</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast">
+    <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 6 9 17l-5-5"/></svg>
+    <span>Added to your basket</span>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
