@@ -6,6 +6,7 @@
    ========================================================================== */
 
 const CART_KEY = "dailybazaar_cart";
+const ORDER_KEY = "dailybazaar_last_order";
 const FREE_SHIPPING_THRESHOLD = 40;
 const SHIPPING_COST = 4.99;
 
@@ -370,7 +371,199 @@ function renderCartPage() {
   if (subtotalEl) subtotalEl.textContent = formatGBP(subtotal);
   if (shippingEl) shippingEl.textContent = shipping === 0 ? "Free" : formatGBP(shipping);
   if (totalEl) totalEl.textContent = formatGBP(total);
-  if (checkoutBtn) checkoutBtn.disabled = lines.length === 0;
+
+  // checkout-btn is an <a> on cart.html — "disable" it by blocking the click
+  // rather than using the disabled attribute, which <a> does not support.
+  if (checkoutBtn) {
+    const isEmpty = lines.length === 0;
+    checkoutBtn.classList.toggle("btn-disabled", isEmpty);
+    checkoutBtn.setAttribute("aria-disabled", isEmpty ? "true" : "false");
+    checkoutBtn.tabIndex = isEmpty ? -1 : 0;
+  }
+}
+
+/* -------------------------------- Checkout page --------------------------------- */
+
+function generateOrderNumber() {
+  const stamp = Date.now().toString(36).toUpperCase().slice(-5);
+  const rand = Math.floor(100 + Math.random() * 900);
+  return `DB-${stamp}${rand}`;
+}
+
+function renderCheckoutSummary() {
+  const list = document.getElementById("checkout-items");
+  if (!list) return null;
+
+  const lines = getCartLines();
+  const subtotal = lines.reduce((sum, l) => sum + l.price * l.qty, 0);
+  const shipping = subtotal === 0 || subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+  const total = subtotal + shipping;
+
+  list.innerHTML = lines.length
+    ? lines
+        .map(
+          (l) => `
+        <div class="summary-row">
+          <span>${l.title} × ${l.qty}</span>
+          <span>${formatGBP(l.price * l.qty)}</span>
+        </div>`
+        )
+        .join("")
+    : `<p class="summary-note">Your basket is empty — <a href="shop.html" style="color:var(--color-emerald-dark); font-weight:600;">add something before checking out</a>.</p>`;
+
+  const subtotalEl = document.getElementById("checkout-subtotal");
+  const shippingEl = document.getElementById("checkout-shipping");
+  const totalEl = document.getElementById("checkout-total");
+  if (subtotalEl) subtotalEl.textContent = formatGBP(subtotal);
+  if (shippingEl) shippingEl.textContent = shipping === 0 ? "Free" : formatGBP(shipping);
+  if (totalEl) totalEl.textContent = formatGBP(total);
+
+  return { lines, subtotal, shipping, total };
+}
+
+function initCheckoutPage() {
+  const form = document.getElementById("checkout-form");
+  if (!form) return;
+
+  let order = renderCheckoutSummary();
+  const placeOrderBtn = document.getElementById("place-order-btn");
+  const formError = document.getElementById("checkout-form-error");
+
+  // If the basket is empty, there is nothing to check out
+  if (!order || order.lines.length === 0) {
+    if (placeOrderBtn) placeOrderBtn.disabled = true;
+  }
+
+  // Toggle card fields vs. the PayPal placeholder based on payment method
+  const paymentRadios = document.querySelectorAll('input[name="payment-method"]');
+  const cardFields = document.getElementById("card-fields");
+  const paypalNotice = document.getElementById("paypal-notice");
+  paymentRadios.forEach((radio) => {
+    radio.addEventListener("change", () => {
+      const isCard = radio.value === "card" && radio.checked;
+      if (radio.checked) {
+        cardFields.style.display = radio.value === "card" ? "grid" : "none";
+        paypalNotice.style.display = radio.value === "paypal" ? "block" : "none";
+      }
+    });
+  });
+
+  // Basic client-side formatting helpers (display only — nothing here is
+  // ever saved or transmitted; see the note above the payment section).
+  const cardNumberInput = document.getElementById("card-number");
+  if (cardNumberInput) {
+    cardNumberInput.addEventListener("input", () => {
+      const digits = cardNumberInput.value.replace(/\D/g, "").slice(0, 16);
+      cardNumberInput.value = digits.replace(/(.{4})/g, "$1 ").trim();
+    });
+  }
+  const expiryInput = document.getElementById("card-expiry");
+  if (expiryInput) {
+    expiryInput.addEventListener("input", () => {
+      let digits = expiryInput.value.replace(/\D/g, "").slice(0, 4);
+      if (digits.length > 2) digits = `${digits.slice(0, 2)}/${digits.slice(2)}`;
+      expiryInput.value = digits;
+    });
+  }
+  const cvcInput = document.getElementById("card-cvc");
+  if (cvcInput) {
+    cvcInput.addEventListener("input", () => {
+      cvcInput.value = cvcInput.value.replace(/\D/g, "").slice(0, 4);
+    });
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    order = renderCheckoutSummary();
+
+    if (!order || order.lines.length === 0) {
+      formError.textContent = "Your basket is empty — add a product before checking out.";
+      formError.style.display = "block";
+      return;
+    }
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    formError.style.display = "none";
+    placeOrderBtn.disabled = true;
+    placeOrderBtn.textContent = "Placing your order…";
+
+    // Simulate processing latency. In a production build, this is where you
+    // would redirect to Stripe Checkout / a PayPal button / another hosted
+    // payment page instead — a static site should never handle raw card
+    // data itself.
+    setTimeout(() => {
+      const shippingDetails = {
+        name: document.getElementById("full-name").value.trim(),
+        address: document.getElementById("address").value.trim(),
+        city: document.getElementById("city").value.trim(),
+        postcode: document.getElementById("postcode").value.trim(),
+        email: document.getElementById("email").value.trim(),
+      };
+
+      const confirmedOrder = {
+        orderNumber: generateOrderNumber(),
+        placedAt: new Date().toISOString(),
+        lines: order.lines.map((l) => ({ id: l.id, title: l.title, price: l.price, qty: l.qty })),
+        subtotal: order.subtotal,
+        shipping: order.shipping,
+        total: order.total,
+        shippingDetails,
+        paymentMethod: document.querySelector('input[name="payment-method"]:checked').value,
+      };
+
+      // Note: card number, expiry, and CVC are intentionally never read
+      // into this object or saved anywhere — only order + delivery details.
+      localStorage.setItem(ORDER_KEY, JSON.stringify(confirmedOrder));
+      localStorage.removeItem(CART_KEY);
+      window.location.href = "order-confirmation.html";
+    }, 900);
+  });
+}
+
+/* --------------------------- Order confirmation page ------------------------------ */
+
+function initOrderConfirmationPage() {
+  const root = document.getElementById("confirmation-root");
+  if (!root) return;
+
+  updateCartBadge();
+
+  const raw = localStorage.getItem(ORDER_KEY);
+  const emptyState = document.getElementById("no-order-state");
+  const detailState = document.getElementById("order-details");
+
+  if (!raw) {
+    if (emptyState) emptyState.style.display = "block";
+    if (detailState) detailState.style.display = "none";
+    return;
+  }
+
+  const order = JSON.parse(raw);
+  if (emptyState) emptyState.style.display = "none";
+  if (detailState) detailState.style.display = "block";
+
+  document.getElementById("order-number").textContent = order.orderNumber;
+  document.getElementById("order-email").textContent = order.shippingDetails.email;
+  document.getElementById("order-address").textContent =
+    `${order.shippingDetails.name}, ${order.shippingDetails.address}, ${order.shippingDetails.city} ${order.shippingDetails.postcode}`;
+
+  const itemsList = document.getElementById("order-items");
+  itemsList.innerHTML = order.lines
+    .map(
+      (l) => `
+      <div class="summary-row">
+        <span>${l.title} × ${l.qty}</span>
+        <span>${formatGBP(l.price * l.qty)}</span>
+      </div>`
+    )
+    .join("");
+
+  document.getElementById("order-subtotal").textContent = formatGBP(order.subtotal);
+  document.getElementById("order-shipping").textContent = order.shipping === 0 ? "Free" : formatGBP(order.shipping);
+  document.getElementById("order-total").textContent = formatGBP(order.total);
 }
 
 /* ---------------------------------- Init ------------------------------------- */
@@ -382,12 +575,17 @@ document.addEventListener("DOMContentLoaded", () => {
   initShopPage();
   initProductPage();
   renderCartPage();
+  initCheckoutPage();
+  initOrderConfirmationPage();
 
-  // Checkout is a placeholder on a static, backend-free site
+  // Block navigation from cart.html's "Proceed to Checkout" link while empty
   const checkoutBtn = document.getElementById("checkout-btn");
-  if (checkoutBtn) {
-    checkoutBtn.addEventListener("click", () => {
-      showToast("Checkout isn't connected yet — this is a demo storefront");
+  if (checkoutBtn && checkoutBtn.tagName === "A") {
+    checkoutBtn.addEventListener("click", (e) => {
+      if (checkoutBtn.classList.contains("btn-disabled")) {
+        e.preventDefault();
+        showToast("Your basket is empty");
+      }
     });
   }
 });
