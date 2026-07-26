@@ -1,0 +1,148 @@
+<!-- ==========================================================================
+     DailyBazaar — order-confirmation.html
+     ========================================================================== -->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed — DailyBazaar</title>
+  <meta name="description" content="Your DailyBazaar order has been placed.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="confirmation">
+
+  <!-- ============================ HEADER ============================ -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">Daily<span>Bazaar</span></a>
+
+      <nav class="main-nav" aria-label="Primary">
+        <a href="index.html" data-nav="home">Home</a>
+        <a href="shop.html" data-nav="shop">Shop</a>
+        <a href="index.html#contact" data-nav="contact">Contact</a>
+      </nav>
+
+      <form class="header-search" role="search" onsubmit="return false;">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="search" placeholder="Search for products…" aria-label="Search products">
+      </form>
+
+      <div class="header-actions">
+        <a href="cart.html" class="icon-btn" aria-label="View cart">
+          <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.6 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+          <span class="cart-badge" data-cart-count>0</span>
+        </a>
+        <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="container mobile-search">
+      <form class="header-search" role="search" onsubmit="return false;">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="search" placeholder="Search for products…" aria-label="Search products">
+      </form>
+    </div>
+  </header>
+
+  <!-- ============================ CONFIRMATION ============================ -->
+  <section class="section" id="confirmation-root">
+    <div class="container">
+      <div class="confirmation-box">
+
+        <!-- Shown when an order was just placed -->
+        <div id="order-details" style="display:none;">
+          <div class="confirmation-icon">
+            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 6 9 17l-5-5"/></svg>
+          </div>
+          <h1>Thanks — your order is confirmed</h1>
+          <p>A confirmation email is on its way to <strong id="order-email"></strong>.</p>
+          <span class="order-number-chip">Order <span id="order-number"></span></span>
+
+          <div class="confirmation-card">
+            <h3>Delivery to</h3>
+            <p class="confirmation-meta" id="order-address"></p>
+
+            <h3>Items</h3>
+            <div id="order-items"></div>
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span id="order-subtotal">£0.00</span>
+            </div>
+            <div class="summary-row">
+              <span>UK Delivery</span>
+              <span id="order-shipping">Free</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total paid</span>
+              <span id="order-total">£0.00</span>
+            </div>
+          </div>
+
+          <p style="margin-top: 28px;">
+            <a href="shop.html" class="btn btn-primary">Continue Shopping</a>
+          </p>
+        </div>
+
+        <!-- Shown if someone lands here directly with no order on record -->
+        <div id="no-order-state" style="display:none;">
+          <h1>No recent order found</h1>
+          <p>Looks like you haven't placed an order yet this session.</p>
+          <a href="shop.html" class="btn btn-primary">Start Shopping</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================== FOOTER ================================ -->
+  <footer class="site-footer" id="contact">
+    <div class="container footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">Daily<span>Bazaar</span></a>
+        <p>Everyday essentials for UK homes, shipped quickly and priced fairly. Based in the UK, built for UK doorsteps.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="shop.html">All Products</a></li>
+          <li><a href="shop.html?category=Home%20%26%20Kitchen">Home &amp; Kitchen</a></li>
+          <li><a href="shop.html?category=Tech%20Gadgets">Tech Gadgets</a></li>
+          <li><a href="shop.html?category=Daily%20Living">Daily Living</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#contact">Contact Us</a></li>
+          <li><a href="#contact">Delivery &amp; Returns</a></li>
+          <li><a href="#contact">Track My Order</a></li>
+          <li><a href="#contact">FAQs</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#contact">About DailyBazaar</a></li>
+          <li><a href="#contact">Sustainability</a></li>
+          <li><a href="#contact">Careers</a></li>
+          <li><a href="#contact">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© 2026 DailyBazaar Ltd. All rights reserved. Registered in England &amp; Wales.</span>
+      <div class="payment-icons">
+        <span>VISA</span>
+        <span>Mastercard</span>
+        <span>PayPal</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
